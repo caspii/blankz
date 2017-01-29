@@ -9,6 +9,14 @@ app = Flask(__name__)
 def landing():
     return render_template('landing.html')
 
+@app.route('/explanation')
+def explanation():
+    return render_template('explanation.html')
+
+@app.route('/add_section')
+def add_section():
+    return render_template('add_section.html')
+
 
 @app.errorhandler(500)
 def server_error(e):
