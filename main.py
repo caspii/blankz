@@ -1,6 +1,7 @@
 import logging
 
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect, url_for
+from model import Game
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -14,18 +15,29 @@ def landing():
 def explanation():
     return render_template('explanation.html')
 
-@app.route('/add_section')
+@app.route('/add_section', methods=['GET', 'POST'])
 def add_section():
-    return render_template('add_section.html')
+    print("Add_section")
+    if request.method == 'GET':
+        return render_template('add_section.html')
+    else:
+        new_game = Game(name='woot', blank1='your mother')
+        key = new_game.put()
+        print('URL Safekey = ' + key.urlsafe())
+        return redirect('/incomplete')
+
 
 @app.route('/incomplete')
 def incomplete():
-    flash("Great, your entry has been saved")
+    flash('Great, your entry has been saved')
+    new_game = Game(name='woot', blank1='your mother')
+    key = new_game.put()
+    print('URL Safekey = ' + key.urlsafe())
     return render_template('incomplete.html')
 
 @app.route('/complete')
 def complete():
-    flash("Great, your entry has been saved")
+    flash('Great, your entry has been saved')
     return render_template('complete.html')
 
 
