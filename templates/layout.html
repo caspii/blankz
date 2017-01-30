@@ -20,10 +20,19 @@
             <li class="nav-item">
               <a class="nav-link" href="/">Home</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/complete">complete</a>
+            </li>
           </ul>
         </nav>
         <h3 class="text-muted">Consequences</h3>
       </div>
+
+      {% for message in get_flashed_messages() %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{ message|safe }}</div>
+      {% endfor %}
 
       <!-- Begin actual content -->
       {% block body %}{% endblock %}

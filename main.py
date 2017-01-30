@@ -1,8 +1,9 @@
 import logging
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 
 app = Flask(__name__)
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 
 @app.route('/')
@@ -16,6 +17,17 @@ def explanation():
 @app.route('/add_section')
 def add_section():
     return render_template('add_section.html')
+
+@app.route('/incomplete')
+def incomplete():
+    flash("Great, your entry has been saved")
+    return render_template('incomplete.html')
+
+@app.route('/complete')
+def complete():
+    flash("Great, your entry has been saved")
+    return render_template('complete.html')
+
 
 
 @app.errorhandler(500)
