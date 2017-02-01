@@ -22,9 +22,11 @@ def add_section():
     if request.method == 'GET':
         return render_template('add_section.html')
     else:
+        new_game = Game()
         new_game_key = Game().put()
-        Slot(game=new_game_key, text='Sweet').put()
-        Slot(game=new_game_key, text='DUDE').put()
+        new_game.create_slots()
+        # Slot(game=new_game_key, text='Sweet').put()
+        # Slot(game=new_game_key, text='DUDE').put()
         url_string = new_game_key.urlsafe()
         flash('Great, your entry has been saved')
         return redirect('/game/' + url_string)
