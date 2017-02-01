@@ -16,9 +16,9 @@ def landing():
 def explanation():
     return render_template('explanation.html')
 
+
 @app.route('/add_section', methods=['GET', 'POST'])
 def add_section():
-    print("Add_section")
     if request.method == 'GET':
         return render_template('add_section.html')
     else:
@@ -26,19 +26,25 @@ def add_section():
         Slot(game=new_game_key, text='Sweet').put()
         Slot(game=new_game_key, text='DUDE').put()
         url_string = new_game_key.urlsafe()
-        return redirect('/incomplete/' + url_string)
+        flash('Great, your entry has been saved')
+        return redirect('/game/' + url_string)
 
 
-@app.route('/incomplete/<key>')
-def incomplete(key):
-    flash('Great, your entry has been saved')
-    return render_template('incomplete.html')
+@app.route('/game/<url_string>')
+def game(url_string):
+    game_key = ndb.Key(urlsafe=url_string)
+    game = game_key.get()
+    print(game)
+    if game.complete:
+        return render_template('complete.html')
+    else:
+        return render_template('incomplete.html')
+
 
 @app.route('/complete')
 def complete():
     flash('Great, your entry has been saved')
     return render_template('complete.html')
-
 
 
 @app.errorhandler(500)
