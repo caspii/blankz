@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, abort
 from model import Game, Slot
 from google.appengine.ext import ndb
 
@@ -36,6 +36,8 @@ def add_section():
 def game(url_string):
     game_key = ndb.Key(urlsafe=url_string)
     game = game_key.get()
+    if game == None:
+        abort(404)
     print(game)
     if game.complete:
         return render_template('complete.html')
@@ -54,3 +56,8 @@ def server_error(e):
     # Log the error and stacktrace.
     logging.exception('An error occurred during a request.')
     return 'An internal error occurred.', 500
+
+@app.errorhandler(404)
+def page_not_found(e):
+    logging.info('An error occurred during a request.')
+    return render_template('404.html'), 404
