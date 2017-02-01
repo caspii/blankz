@@ -24,9 +24,7 @@ def add_section():
     else:
         new_game = Game()
         new_game_key = Game().put()
-        new_game.create_slots()
-        # Slot(game=new_game_key, text='Sweet').put()
-        # Slot(game=new_game_key, text='DUDE').put()
+        new_game.create_slots(new_game_key)
         url_string = new_game_key.urlsafe()
         flash('Great, your entry has been saved')
         return redirect('/game/' + url_string)
@@ -39,6 +37,9 @@ def game(url_string):
     if game == None:
         abort(404)
     print(game)
+    slots = Slot.query(Slot.game == game.key)
+    for slot in slots:
+        print(slot)
     if game.complete:
         return render_template('complete.html')
     else:

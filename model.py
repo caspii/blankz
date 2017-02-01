@@ -5,12 +5,14 @@ class Game(ndb.Model):
     complete = ndb.BooleanProperty(default=False)
     slots = ndb.IntegerProperty(default=5)
 
-    def create_slots(self):
+    def create_slots(self, game_key):
         "Creates all slots required for the game in the Datastore"
         slot_list = []
+        print self
         for counter in range(0,self.slots):
-            slot_list.append(Slot(game=self.key, slot_order=counter))
-        ndb.put_multi(slot_list) # Batch datastore operation
+            #slot_list.append(Slot(game=self.key, slot_order=counter))
+            Slot(game=game_key, slot_order=counter).put()
+        #ndb.put_multi(slot_list) # Batch datastore operation
 
 
 class Slot(ndb.Model):
