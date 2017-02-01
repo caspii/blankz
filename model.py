@@ -1,7 +1,8 @@
 from google.appengine.ext import ndb
 
 class Game(ndb.Model):
-    date_created = ndb.DateTimeProperty(auto_now_add=True)
+    date_created = ndb.DateTimeProperty(auto_now=True)
+    date_altered = ndb.DateTimeProperty(auto_now_add=True)
     complete = ndb.BooleanProperty(default=False)
     slots = ndb.IntegerProperty(default=5)
 
@@ -16,7 +17,11 @@ class Game(ndb.Model):
 
 
 class Slot(ndb.Model):
+    date_altered = ndb.DateTimeProperty(auto_now_add=True)
     game = ndb.KeyProperty(Game)
     slot_order = ndb.IntegerProperty()
     text = ndb.StringProperty()
-    reserved = ndb.BooleanProperty(default=False)
+    # state 0 = slot free
+    # state 1 = slot reserved
+    # state 3 = slot completed
+    state = ndb.IntegerProperty(default=0)

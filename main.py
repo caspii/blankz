@@ -36,8 +36,9 @@ def game(url_string):
     game = game_key.get()
     if game == None:
         abort(404)
-    print(game)
-    slots = Slot.query(Slot.game == game.key)
+    # print(game)
+    slots = Slot.query(ndb.AND(Slot.game == game.key, Slot.state == 3))
+    # Print completed slots
     for slot in slots:
         print(slot)
     if game.complete:
