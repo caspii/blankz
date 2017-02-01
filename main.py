@@ -1,7 +1,8 @@
 import logging
 
 from flask import Flask, render_template, request, flash, redirect, url_for
-from model import Game
+from model import Game, Slot
+from google.appengine.ext import ndb
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -21,18 +22,16 @@ def add_section():
     if request.method == 'GET':
         return render_template('add_section.html')
     else:
-        new_game = Game(name='woot', blank1='your mother')
-        key = new_game.put()
-        print('URL Safekey = ' + key.urlsafe())
-        return redirect('/incomplete')
+        new_game_key = Game().put()
+        Slot(game=new_game_key, text='Sweet').put()
+        Slot(game=new_game_key, text='DUDE').put()
+        url_string = new_game_key.urlsafe()
+        return redirect('/incomplete/' + url_string)
 
 
-@app.route('/incomplete')
-def incomplete():
+@app.route('/incomplete/<key>')
+def incomplete(key):
     flash('Great, your entry has been saved')
-    new_game = Game(name='woot', blank1='your mother')
-    key = new_game.put()
-    print('URL Safekey = ' + key.urlsafe())
     return render_template('incomplete.html')
 
 @app.route('/complete')
