@@ -31,10 +31,12 @@ def game(url_string):
     game = Game.get_game(url_string)
     if game == None:
         abort(404)
-    if game.complete:
+    complete_slot_count = len(game.get_completed_slots())
+    if game.slot_count == complete_slot_count:
         return render_template('complete.html')
     else:
-        return render_template('incomplete.html')
+        return render_template('incomplete.html', slot_count=game.slot_count,
+            complete_slot_count=complete_slot_count)
 
 
 @app.route('/complete')
