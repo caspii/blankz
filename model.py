@@ -6,15 +6,25 @@ class Game(ndb.Model):
     complete = ndb.BooleanProperty(default=False)
     slots = ndb.IntegerProperty(default=5)
 
-    def create_slots(self, game_key):
-        "Creates all slots required for the game in the Datastore"
+    @classmethod
+    def new(cls):
+        "Creates a game entity, the slots for the game, and returns a url_string"
+        new_game = Game()
+        new_game_key = new_game.put()
         slot_list = []
-        print self
-        for counter in range(0,self.slots):
-            #slot_list.append(Slot(game=self.key, slot_order=counter))
-            Slot(game=game_key, slot_order=counter).put()
-        #ndb.put_multi(slot_list) # Batch datastore operation
+        for counter in range(0, new_game.slots):
+            slot_list.append(Slot(game=new_game_key, slot_order=counter))
+        ndb.put_multi(slot_list) # Batch datastore operation
+        return new_game_key.urlsafe()
 
+    @classmethod
+    def get_game(cls, url_string):
+        game_key = ndb.Key(urlsafe=url_string)
+        game = game_key.get()
+        slots = Slot.query(ndb.AND(Slot.game == game.key, Slot.state == 3))
+        for slot in slots:
+            print(slot)
+        return game
 
 class Slot(ndb.Model):
     date_altered = ndb.DateTimeProperty(auto_now_add=True)

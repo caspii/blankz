@@ -2,7 +2,6 @@ import logging
 
 from flask import Flask, render_template, request, flash, redirect, url_for, abort
 from model import Game, Slot
-from google.appengine.ext import ndb
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -22,25 +21,16 @@ def add_section():
     if request.method == 'GET':
         return render_template('add_section.html')
     else:
-        new_game = Game()
-        new_game_key = Game().put()
-        new_game.create_slots(new_game_key)
-        url_string = new_game_key.urlsafe()
+        url_string = Game.new()
         flash('Great, your entry has been saved')
         return redirect('/game/' + url_string)
 
 
 @app.route('/game/<url_string>')
 def game(url_string):
-    game_key = ndb.Key(urlsafe=url_string)
-    game = game_key.get()
+    game = Game.get_game(url_string)
     if game == None:
         abort(404)
-    # print(game)
-    slots = Slot.query(ndb.AND(Slot.game == game.key, Slot.state == 3))
-    # Print completed slots
-    for slot in slots:
-        print(slot)
     if game.complete:
         return render_template('complete.html')
     else:
