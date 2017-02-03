@@ -15,15 +15,33 @@ def landing():
 def explanation():
     return render_template('explanation.html')
 
-
-@app.route('/add_section', methods=['GET', 'POST'])
-def add_section():
+@app.route('/create', methods=['GET', 'POST'])
+def create():
     if request.method == 'GET':
         return render_template('add_section.html')
     else:
-        url_string = Game.new()
+        game = Game.new()
+        url_string = game.get_url_string()
+        incomplete_slot = game.get_incomplete_slot()
         flash('Great, your entry has been saved')
         return redirect('/game/' + url_string)
+
+@app.route('/game/<url_string>/add_section', methods=['GET', 'POST'])
+def add_section(url_string):
+    game = Game.get_game(url_string)
+    if game == None:
+        abort(404)
+    incomplete_slot = game.get_incomplete_slot()
+    if incomplete_slot is None:
+        # Game is complete
+        return render_template('complete.html')
+    if request.method == 'GET':
+        return render_template('add_section.html')
+    else:
+        return redirect('/game/' + url_string)
+        flash('Great, your entry has been saved')
+
+
 
 
 @app.route('/game/<url_string>')
