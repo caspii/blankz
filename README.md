@@ -5,7 +5,6 @@ A madlibs / consequences-type game running on Google App Engine
 1. Install this package: `google-cloud-sdk-app-engine-python`
 2. `gcloud init`
 
-
 ## Local Devserver
 To run use `dev_appserver.py .` in project root.
 * App is available on http://localhost:8080/
@@ -15,3 +14,6 @@ To run use `dev_appserver.py .` in project root.
 * Deploy:  `gcloud app deploy`
 * List projects: `gcloud projects list`
 * Change project project: `gcloud init`
+
+## Installing Python packages
+New packages are installed to the `lib` folder using the `pip install -t lib <package-name>` command.
