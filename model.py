@@ -38,7 +38,6 @@ class Game(ndb.Model):
         Returns one slot, unreserved if possible, and reserves it
         """
         slots_query = Slot.query(Slot.state < 3, ancestor=self.key)
-        #slots_query.query(Slot.state < 3)
         slots_query.order(Slot.state) # sort unreserved slots to top
         incomplete_slot = slots_query.get()
         print "Got incomplete slot: " + str(incomplete_slot)
@@ -59,3 +58,8 @@ class Slot(ndb.Model):
     slot_order = ndb.IntegerProperty()
     text = ndb.StringProperty()
     state = ndb.IntegerProperty(default=0)
+
+    def save(self, text):
+        self.text = text
+        self.state = 3
+        self.put()
