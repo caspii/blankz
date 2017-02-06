@@ -1,5 +1,8 @@
 from google.appengine.ext import ndb
 
+class SlotState:
+    Free, Reserved, Complete = range(3)
+
 class Game(ndb.Model):
     date_created = ndb.DateTimeProperty(auto_now=True)
     date_altered = ndb.DateTimeProperty(auto_now_add=True)
@@ -26,7 +29,7 @@ class Game(ndb.Model):
         return self.key.urlsafe()
 
     def get_completed_slots(self):
-        slots_query = Slot.query(Slot.state == 3, ancestor=self.key)
+        slots_query = Slot.query(Slot.state == SlotState.Complete, ancestor=self.key)
         slots = []
         for slot in slots_query:
             slots.append(slot)
@@ -36,27 +39,24 @@ class Game(ndb.Model):
         """
         Returns one slot, unreserved if possible, and reserves it
         """
-        slots_query = Slot.query(Slot.state < 3, ancestor=self.key)
+        slots_query = Slot.query(Slot.state < SlotState.Complete, ancestor=self.key)
         slots_query.order(Slot.state) # sort unreserved slots to top
         incomplete_slot = slots_query.get()
         print "Got incomplete slot: " + str(incomplete_slot)
         # reserve slot
         if incomplete_slot is not None:
-            incomplete_slot.state = 1
+            incomplete_slot.state = SlotState.Reserved
             incomplete_slot.put()
         return incomplete_slot
 
 
 class Slot(ndb.Model):
     """
-    state 0 = slot free
-    state 1 = slot reserved
-    state 3 = slot completed
     """
     date_altered = ndb.DateTimeProperty(auto_now_add=True)
     slot_order = ndb.IntegerProperty()
     text = ndb.StringProperty()
-    state = ndb.IntegerProperty(default=0)
+    state = ndb.IntegerProperty(default=SlotState.Free)
 
     @classmethod
     def get_slot(cls, url_string):
@@ -68,5 +68,5 @@ class Slot(ndb.Model):
 
     def save(self, text):
         self.text = text
-        self.state = 3
+        self.state = SlotState.Complete
         self.put()

@@ -1,8 +1,9 @@
 import logging
 
 from flask import Flask, render_template, request, flash, redirect, url_for, abort
-from model import Game, Slot
+from model import Game, Slot, SlotState
 from wtforms import Form, StringField, HiddenField, validators
+
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -57,7 +58,7 @@ def add_section_post():
         if game == None:
             abort(404)
         incomplete_slot = Slot.get_slot(form.slot_key.data)
-        if incomplete_slot.state == 3:
+        if incomplete_slot.state == SlotState.Complete:
             # Slot was completed in the meantime
             flash('Somebody beat you to it, your entry was not saved')
         else:
