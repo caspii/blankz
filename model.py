@@ -20,8 +20,7 @@ class Game(ndb.Model):
     @classmethod
     def get_game(cls, url_string):
         game_key = ndb.Key(urlsafe=url_string)
-        game = game_key.get()
-        return game
+        return game_key.get()
 
     def get_url_string(self):
         return self.key.urlsafe()
@@ -58,6 +57,14 @@ class Slot(ndb.Model):
     slot_order = ndb.IntegerProperty()
     text = ndb.StringProperty()
     state = ndb.IntegerProperty(default=0)
+
+    @classmethod
+    def get_slot(cls, url_string):
+        slot_key = ndb.Key(urlsafe=url_string)
+        return slot_key.get()
+
+    def get_url_string(self):
+        return self.key.urlsafe()
 
     def save(self, text):
         self.text = text
