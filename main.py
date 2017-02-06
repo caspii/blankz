@@ -31,11 +31,11 @@ def add_section_get(url_string=None):
         game = Game.get_game(url_string)
         if game == None:
             abort(404)
-        incomplete_slot = game.get_incomplete_slot()
-        if incomplete_slot is None:
+        free_slot = game.get_free_slot()
+        if free_slot is None:
             # Game is complete
             return render_template('complete.html')
-        form.slot_key.data = incomplete_slot.get_url_string()
+        form.slot_key.data = free_slot.get_url_string()
         form.game_key.data = url_string
         return render_template('add_section.html', form=form, url_string=url_string)
 
@@ -47,8 +47,8 @@ def add_section_post():
         # We're creating a new story
         game = Game.new()
         url_string = game.get_url_string()
-        incomplete_slot = game.get_incomplete_slot()
-        incomplete_slot.save(form.section.data)
+        free_slot = game.get_free_slot()
+        free_slot.save(form.section.data)
         return redirect('/game/' + url_string)
         flash('Great, your entry has been saved')
     else:
@@ -57,13 +57,13 @@ def add_section_post():
         game = Game.get_game(url_string)
         if game == None:
             abort(404)
-        incomplete_slot = Slot.get_slot(form.slot_key.data)
-        if incomplete_slot.state == SlotState.Complete:
+        free_slot = Slot.get_slot(form.slot_key.data)
+        if free_slot.state == SlotState.Complete:
             # Slot was completed in the meantime
             flash('Somebody beat you to it, your entry was not saved')
         else:
-            incomplete_slot = Slot.get_slot(form.slot_key.data)
-            incomplete_slot.save(form.section.data)
+            free_slot = Slot.get_slot(form.slot_key.data)
+            free_slot.save(form.section.data)
             flash('Great, your entry has been saved')
         return redirect('/game/' + url_string)
 

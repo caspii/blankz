@@ -35,19 +35,22 @@ class Game(ndb.Model):
             slots.append(slot)
         return slots
 
-    def get_incomplete_slot(self):
+    def get_free_slot(self):
         """
-        Returns one slot, unreserved if possible, and reserves it
+        Returns one slot, unreserved if possible, and reserves it.
+
+        Slot is saved in session so that user cannot accidentally reserve
+        multiple slots
         """
         slots_query = Slot.query(Slot.state < SlotState.Complete, ancestor=self.key)
         slots_query.order(Slot.state) # sort unreserved slots to top
-        incomplete_slot = slots_query.get()
-        print "Got incomplete slot: " + str(incomplete_slot)
+        free_slot = slots_query.get()
+        print "Got free slot: " + str(free_slot)
         # reserve slot
-        if incomplete_slot is not None:
-            incomplete_slot.state = SlotState.Reserved
-            incomplete_slot.put()
-        return incomplete_slot
+        if free_slot is not None:
+            free_slot.state = SlotState.Reserved
+            free_slot.put()
+        return free_slot
 
 
 class Slot(ndb.Model):
