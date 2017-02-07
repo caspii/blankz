@@ -44,11 +44,13 @@ def add_section_get(game_key=None):
 @app.route('/add_section/', methods=['POST'])
 def add_section_post():
     form = StoryCreateForm(request.form)
-    free_slot = Slot.get_slot(form.slot_key.data)
-    free_slot.save(form.section.data)
-    game_key = form.game_key.data
-    flash('Great, your entry has been saved')
-    return redirect('/game/' + game_key)
+    if form.validate():
+        free_slot = Slot.get_slot(form.slot_key.data)
+        free_slot.save(form.section.data)
+        game_key = form.game_key.data
+        flash('Great, your entry has been saved')
+        return redirect('/game/' + game_key)
+    return render_template('add_section.html', form=form)
 
 
 @app.route('/game/<game_key>')
