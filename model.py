@@ -1,4 +1,5 @@
 from google.appengine.ext import ndb
+from flask import session
 
 class SlotState:
     Free, Reserved, Complete = range(3)
@@ -21,11 +22,11 @@ class Game(ndb.Model):
         return new_game
 
     @classmethod
-    def get_game(cls, url_string):
-        game_key = ndb.Key(urlsafe=url_string)
+    def get_game(cls, game_key):
+        game_key = ndb.Key(urlsafe=game_key)
         return game_key.get()
 
-    def get_url_string(self):
+    def get_game_key(self):
         return self.key.urlsafe()
 
     def get_completed_slots(self):
@@ -37,19 +38,31 @@ class Game(ndb.Model):
 
     def get_free_slot(self):
         """
-        Returns one slot, unreserved if possible, and reserves it.
+        Returns one free slot, unreserved if possible, and reserves it.
 
         Slot is saved in session so that user cannot accidentally reserve
-        multiple slots
+        multiple slots (by reloading page)
         """
-        slots_query = Slot.query(Slot.state < SlotState.Complete, ancestor=self.key)
-        slots_query.order(Slot.state) # sort unreserved slots to top
-        free_slot = slots_query.get()
-        print "Got free slot: " + str(free_slot)
-        # reserve slot
-        if free_slot is not None:
-            free_slot.state = SlotState.Reserved
+        session_slot_key = 'slot' + str(self.key.id())
+        if session.get(session_slot_key) is None:
+            # No reserved slot is stored in the session
+            slots_query = Slot.query(Slot.state < SlotState.Complete, ancestor=self.key)
+            slots_query.order(Slot.state) # sort unreserved slots to top
+            free_slot = slots_query.get()
+            print "Got new free slot: " + str(free_slot)
+            # reserve slot
+            if free_slot is not None:
+                free_slot.state = SlotState.Reserved
+                free_slot.put()
+            print "Self key id = " + str(self.key.id())
+            print "free slot key id = " + str(free_slot.key.id())
+            session[session_slot_key] = free_slot.key.urlsafe()
+        else:
+            slot_url = session.get(session_slot_key)
+            free_slot = ndb.Key(urlsafe=slot_url).get()
+            free_slot.state = SlotState.Reserved # make it possible to edit own old slot
             free_slot.put()
+            print "Got old free slot: " + str(free_slot)
         return free_slot
 
 
@@ -62,11 +75,12 @@ class Slot(ndb.Model):
     state = ndb.IntegerProperty(default=SlotState.Free)
 
     @classmethod
-    def get_slot(cls, url_string):
-        slot_key = ndb.Key(urlsafe=url_string)
+    def get_slot(cls, game_key):
+        print "Getting slot: " + game_key
+        slot_key = ndb.Key(urlsafe=game_key)
         return slot_key.get()
 
-    def get_url_string(self):
+    def get_slot_key(self):
         return self.key.urlsafe()
 
     def save(self, text):
