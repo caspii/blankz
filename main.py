@@ -36,7 +36,7 @@ def add_section_get(game_key=None):
         free_slot = game.get_free_slot()
         if free_slot is None:
             # Game is complete
-            return render_template('complete.html')
+            return redirect('/game/' + game_key)
     form.slot_key.data = free_slot.get_slot_key()
     form.game_key.data = game_key
     return render_template('add_section.html', form=form)
@@ -64,12 +64,6 @@ def game(game_key):
     else:
         return render_template('incomplete.html', slot_count=game.slot_count,
             complete_slot_count=complete_slot_count)
-
-
-@app.route('/complete')
-def complete():
-    flash('Great, your entry has been saved')
-    return render_template('complete.html')
 
 
 @app.errorhandler(500)

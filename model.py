@@ -5,10 +5,11 @@ class SlotState:
     Free, Reserved, Complete = range(3)
 
 class Game(ndb.Model):
-    date_created = ndb.DateTimeProperty(auto_now=True)
-    date_altered = ndb.DateTimeProperty(auto_now_add=True)
-    complete = ndb.BooleanProperty(default=False)
-    slot_count = ndb.IntegerProperty(default=5)
+    date_created =  ndb.DateTimeProperty(auto_now=True)
+    date_altered =  ndb.DateTimeProperty(auto_now_add=True)
+    complete =      ndb.BooleanProperty(default=False)
+    slot_count =    ndb.IntegerProperty(default=5)
+    game_type =     ndb.IntegerProperty(default=1)
 
     @classmethod
     def new(cls):
@@ -18,7 +19,6 @@ class Game(ndb.Model):
         for counter in range(0, new_game.slot_count):
             slot_list.append(Slot(parent=new_game_key, slot_order=counter))
         ndb.put_multi(slot_list) # Batch datastore operation
-        print "Created slots"
         return new_game
 
     @classmethod
@@ -49,20 +49,16 @@ class Game(ndb.Model):
             slots_query = Slot.query(Slot.state < SlotState.Complete, ancestor=self.key)
             slots_query.order(Slot.state) # sort unreserved slots to top
             free_slot = slots_query.get()
-            print "Got new free slot: " + str(free_slot)
             # reserve slot
             if free_slot is not None:
                 free_slot.state = SlotState.Reserved
                 free_slot.put()
-            print "Self key id = " + str(self.key.id())
-            print "free slot key id = " + str(free_slot.key.id())
             session[session_slot_key] = free_slot.key.urlsafe()
         else:
             slot_url = session.get(session_slot_key)
             free_slot = ndb.Key(urlsafe=slot_url).get()
             free_slot.state = SlotState.Reserved # make it possible to edit own old slot
             free_slot.put()
-            print "Got old free slot: " + str(free_slot)
         return free_slot
 
 
@@ -76,7 +72,6 @@ class Slot(ndb.Model):
 
     @classmethod
     def get_slot(cls, game_key):
-        print "Getting slot: " + game_key
         slot_key = ndb.Key(urlsafe=game_key)
         return slot_key.get()
 
