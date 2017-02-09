@@ -6,9 +6,8 @@ class SlotState:
 
 class Game(ndb.Model):
     date_created =  ndb.DateTimeProperty(auto_now=True)
-    date_altered =  ndb.DateTimeProperty(auto_now_add=True)
-    complete =      ndb.BooleanProperty(default=False)
-    slot_count =    ndb.IntegerProperty(default=5)
+    date_altered =  ndb.DateTimeProperty(auto_now_add=True)    
+    slot_count =    ndb.IntegerProperty(default=6)
     game_type =     ndb.IntegerProperty(default=1)
 
     @classmethod
