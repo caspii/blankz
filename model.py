@@ -6,7 +6,7 @@ class SlotState:
 
 class Game(ndb.Model):
     date_created =  ndb.DateTimeProperty(auto_now=True)
-    date_altered =  ndb.DateTimeProperty(auto_now_add=True)    
+    date_altered =  ndb.DateTimeProperty(auto_now_add=True)
     slot_count =    ndb.IntegerProperty(default=6)
     game_type =     ndb.IntegerProperty(default=1)
 
@@ -29,7 +29,7 @@ class Game(ndb.Model):
         return self.key.urlsafe()
 
     def get_completed_slots(self):
-        slots_query = Slot.query(Slot.state == SlotState.Complete, ancestor=self.key)
+        slots_query = Slot.query(Slot.state == SlotState.Complete, ancestor=self.key).order(Slot.slot_order)
         slots = []
         for slot in slots_query:
             slots.append(slot)

@@ -60,12 +60,13 @@ def game(game_key):
     game = Game.get_game(game_key)
     if game == None:
         abort(404)
-    complete_slot_count = len(game.get_completed_slots())
-    if game.slot_count == complete_slot_count:
-        return render_template('complete.html')
+    completed_slots = game.get_completed_slots()
+    if game.slot_count == len(completed_slots):
+        story_text = tuple(a.text for a in completed_slots)
+        return render_template('complete.html', story_text=story_text)
     else:
         return render_template('incomplete.html', slot_count=game.slot_count,
-            complete_slot_count=complete_slot_count)
+            completed_slot_count=len(completed_slots))
 
 
 @app.errorhandler(500)
