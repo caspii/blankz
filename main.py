@@ -3,6 +3,7 @@ import logging
 from flask import Flask, render_template, request, flash, redirect, url_for, abort, session
 from model import Game, Slot, SlotState
 from wtforms import Form, StringField, HiddenField, validators
+from texts import get_text_for_slot
 
 
 app = Flask(__name__)
@@ -39,7 +40,8 @@ def add_section_get(game_key=None):
             return redirect('/game/' + game_key)
     form.slot_key.data = free_slot.get_slot_key()
     form.game_key.data = game_key
-    return render_template('add_section.html', form=form)
+    section_texts = get_text_for_slot(free_slot.slot_order, game.game_type)
+    return render_template('add_section.html', form=form, section_texts=section_texts)
 
 @app.route('/add_section/', methods=['POST'])
 def add_section_post():
