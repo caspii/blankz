@@ -3,7 +3,11 @@
 
 <p> This story is not complete yet. So far <strong>{{ completed_slot_count }} of {{ slot_count }} </strong> blanks have been filled in. Send your friends a link so that they can fill in the blank words.</p>
 
-<p><a class="btn btn-lg btn-block btn-primary" href="#" role="button" >Send link</a></p>
+<div class="collapse" id="share-url">
+  <p>Dude, you totally need to share this URL: <a href="{{ request.url_root }}share/{{ game_key }}">{{ request.url_root }}share/{{ game_key }}</a></p>
+</div>
+
+<p><a class="btn btn-lg btn-block btn-primary" href="#" data-toggle="collapse" data-target="#share-url" role="button" >Send link</a></p>
 
 <p><strong>Come back to this page to see if the story has been completed. </strong></p>
 

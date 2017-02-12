@@ -81,7 +81,8 @@ def game(game_key):
     else:
         response = make_response(render_template('incomplete.html',
             slot_count=game.slot_count,
-            completed_slot_count=len(completed_slots)))
+            completed_slot_count=len(completed_slots),
+            game_key=game_key))
         previous_games = set(get_previous_games(request))
         previous_games.add(game_key)
         cookie_string = "+".join(previous_games)
