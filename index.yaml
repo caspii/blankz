@@ -19,9 +19,9 @@ indexes:
   ancestor: yes
   properties:
   - name: state
-  - name: slot_order
 
 - kind: Slot
   ancestor: yes
   properties:
   - name: state
+  - name: slot_order

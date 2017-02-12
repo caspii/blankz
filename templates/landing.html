@@ -8,6 +8,14 @@
   <p><a class="btn btn-lg btn-success" href="/explanation" role="button">Start now</a></p>
 </div>
 
+<div class="list-group">
+    {% for game in previous_games %}
+      <a href="/game/{{ game}}" class="list-group-item "  ga-on="click" ga-event-category="UI" ga-event-action="click on previous game">
+        Previous game: {{ game }}
+      </a>
+    {% endfor%}
+    </div>
+
 <div class="row marketing">
   <div class="col-lg-6">
     <h4>Subheading</h4>

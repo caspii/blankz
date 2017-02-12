@@ -9,7 +9,7 @@ texts = [
 ]
 
 
-def get_text_for_slot(slot_order, game_type):
+def get_text_for_slot(slot_order):
     """
     Returns descriptive text for the given slot.
         game_type will in future be used to allow different games
