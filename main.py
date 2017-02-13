@@ -33,6 +33,7 @@ def landing():
 
 @app.route('/explanation')
 def explanation():
+    session.pop('last_created_key', None) # Disarm back key mechanism
     return render_template('explanation.html')
 
 @app.route('/join/<game_key>')
@@ -53,8 +54,12 @@ def join(game_key):
 @app.route('/add_section/', methods=['GET'])
 @app.route('/add_section/<game_key>/', methods=['GET'])
 def add_section_get(game_key=None):
+    print "ADD SECTION CALLED"
     form = StoryCreateForm(request.form)
     if game_key == None:
+        if 'last_created_key' in session:
+            # User came here via back button. Fire back key mechanism
+            return redirect('/add_section/' + session['last_created_key'])
         # We're creating a new story
         game = Game.new()
         game_key = game.get_game_key()
@@ -81,6 +86,7 @@ def add_section_post():
     if form.validate():
         free_slot.save(form.section.data)
         game_key = form.game_key.data
+        session['last_created_key'] = game_key # Arm back key mechanism
         flash('Great, your entry has been saved')
         return redirect('/game/' + game_key)
     else:
