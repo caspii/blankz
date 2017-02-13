@@ -120,13 +120,13 @@ def game(game_key):
 @app.errorhandler(500)
 def server_error(e):
     # Log the error and stacktrace.
-    logging.exception('An error occurred during a request.')
+    logging.exception('A 500 error occurred during a request.')
     return 'An internal error occurred.', 500
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    logging.info('An error occurred during a request.')
+    logging.info('A 404 error occurred during a request.')
     return render_template('404.html'), 404
 
 
