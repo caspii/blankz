@@ -1,12 +1,26 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>How does it work?</h1>
 
-The goal is to create a funny story by filling in the blank words.
+{% if game_key is defined %}
+
+  <h1>Help to complete this story</h1>
+
+{% else %}
+
+  <h1>How does it work?</h1>
+
+{% endif %}
+
+The goal is to create a funny or absurd story by filling in the blank words.
 
 <ol>
-  <li>One player starts and sends a link to the other players.</li>
-  <li>Every player fills one (or more) of the blanks. For example, if the blank is "a man's name", the player could enter <mark>Horace</mark></li>
+
+  {% if game_key is defined %}
+    <li>Somebody has already started this story and asked you (and others) to join in.</li>
+  {% else %}
+    <li>One player starts and sends a link to the other players. </li>
+  {% endif %}
+  <li>Every player fills out one of the blanks. For example, if the blank is "a man's name", the player could enter <mark>Horace</mark></li>
   <li>Once all the blanks have been filled in, the story is complete and everyone gets to see it.</li>
 </ol>
 
@@ -17,6 +31,6 @@ The goal is to create a funny story by filling in the blank words.
 
 <p><a class="btn btn-lg btn-block btn-secondary" href="#" role="button" data-toggle="collapse" data-target="#example">See an example</a></p>
 
-<p><a class="btn btn-lg btn-block btn-primary" href="/add_section" role="button">Got it, let's go!</a></p>
+<p><a class="btn btn-lg btn-block btn-primary" href="/add_section/{{ game_key }}" role="button">Got it, let's go!</a></p>
 
 {% endblock %}

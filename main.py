@@ -9,18 +9,25 @@ from texts import get_text_for_slot
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
-def get_previous_games(request):
-    """Return a list of previous games serialized in a cookie"""
-    cookie_string = request.cookies.get('previous_games')
+def get_previous_games(cookies):
+    """Return a list of previous games that are serialized in a cookie"""
+    cookie_string = cookies.get('previous_games')
     previous_games = []
     if cookie_string is not None:
         previous_games = cookie_string.split("+")
     return previous_games
 
+def has_seen_game(cookies, game_key):
+    """Returns a boolean denoting whether user has visited this game before """
+    previous_games = get_previous_games(cookies)
+    if previous_games is not None and game_key in previous_games:
+        return True
+    else:
+        return False
 
 @app.route('/')
 def landing():
-    previous_games = get_previous_games(request)
+    previous_games = get_previous_games(request.cookies)
     print previous_games
     return render_template('landing.html', previous_games=previous_games)
 
@@ -28,6 +35,20 @@ def landing():
 def explanation():
     return render_template('explanation.html')
 
+@app.route('/join/<game_key>')
+def join(game_key):
+    game = Game.get_game(game_key)
+    if game == None:
+        abort(404)
+    completed_slots = game.get_completed_slots()
+    if game.slot_count == len(completed_slots):
+        flash('Sorry, you cannot contribute to the story because it is already complete ')
+        return redirect('/game/' + game_key)
+    if has_seen_game(request.cookies,game_key):
+        flash('You\'ve already added your contribution to this story')
+        return redirect('/game/' + game_key)
+    else:
+        return render_template('explanation.html', game_key=game_key)
 
 @app.route('/add_section/', methods=['GET'])
 @app.route('/add_section/<game_key>/', methods=['GET'])
@@ -83,7 +104,7 @@ def game(game_key):
             slot_count=game.slot_count,
             completed_slot_count=len(completed_slots),
             game_key=game_key))
-        previous_games = set(get_previous_games(request))
+        previous_games = set(get_previous_games(request.cookies))
         previous_games.add(game_key)
         cookie_string = "+".join(previous_games)
         response.set_cookie('previous_games', cookie_string, max_age=10 * 365 * 24 * 60 * 60)
