@@ -2,19 +2,14 @@
 {% block body %}
 
 {% if game_key is defined %}
-
   <h1>Help to complete this story</h1>
-
 {% else %}
-
   <h1>How does it work?</h1>
-
 {% endif %}
 
 The goal is to create a funny or absurd story by filling in the blank words.
 
 <ol>
-
   {% if game_key is defined %}
     <li>Somebody has already started this story and asked you (and others) to join in.</li>
   {% else %}
