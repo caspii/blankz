@@ -9,11 +9,15 @@
 </div>
 
 <div class="list-group">
-    {% for game in previous_games %}
-      <a href="/game/{{ game}}" class="list-group-item "  ga-on="click" ga-event-category="UI" ga-event-action="click on previous game">
-        Previous game: {{ game }}
-      </a>
-    {% endfor%}
+
+    {% if previous_games %}
+      <h5>Your previous stories: </h5>
+      {% for game in previous_games %}
+        <a href="/game/{{game.url}}" class="list-group-item "  ga-on="click" ga-event-category="UI" ga-event-action="click on previous game">
+          {{ game.status }}
+        </a>
+      {% endfor%}
+    {% endif %}
     </div>
 
 <div class="row marketing">

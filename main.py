@@ -1,4 +1,5 @@
 import logging
+import humantime
 
 from flask import Flask, render_template, request, flash, redirect, url_for, abort, session, make_response
 from model import Game, Slot, SlotState
@@ -6,11 +7,12 @@ from wtforms import Form, StringField, HiddenField, validators
 from texts import get_text_for_slot
 
 
+
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 def get_previous_games(cookies):
-    """Return a list of previous games that are serialized in a cookie"""
+    """Return a list of previous game keys from the cookied that are passed in"""
     cookie_string = cookies.get('previous_games')
     previous_games = []
     if cookie_string is not None:
@@ -27,7 +29,22 @@ def has_seen_game(cookies, game_key):
 
 @app.route('/')
 def landing():
-    previous_games = get_previous_games(request.cookies)
+    previous_games_key_list = get_previous_games(request.cookies)
+    previous_games = []
+    for key in previous_games_key_list:
+        game = Game.get_game(key)
+        if game == None:
+            continue
+        game.url = game.get_game_key()
+        game.completed_slot_count = len(game.get_completed_slots())
+        elapse_time = humantime.pretty_date(game.date_created)
+        if (game.slot_count == game.completed_slot_count):
+            game.status = "Completed story created " + elapse_time
+        else:
+            game.status = "Story with %s of %s blanks filled in. " \
+                % (game.completed_slot_count, game.slot_count)
+            game.status += "Created " + elapse_time
+        previous_games.append(game)
     print previous_games
     return render_template('landing.html', previous_games=previous_games)
 
