@@ -37,6 +37,8 @@ def landing():
             continue
         game.url = game.get_game_key()
         game.completed_slot_count = len(game.get_completed_slots())
+        if game.completed_slot_count == 0:
+            continue
         elapse_time = humantime.pretty_date(game.date_created)
         if (game.slot_count == game.completed_slot_count):
             game.status = "Completed story created " + elapse_time
