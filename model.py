@@ -50,10 +50,12 @@ class Game(ndb.Model):
             slots_query.order(Slot.state) # sort unreserved slots to top
             free_slot = slots_query.get()
             # reserve slot
-            if free_slot is not None and free_slot.state < SlotState.Complete:
-                free_slot.state = SlotState.Reserved
-                free_slot.put()
-            session[session_slot_key] = free_slot.key.urlsafe()
+            if free_slot is not None:
+                session[session_slot_key] = free_slot.key.urlsafe()
+                if free_slot.state < SlotState.Complete:
+                    free_slot.state = SlotState.Reserved
+                    free_slot.put()
+
         else:
             slot_url = session.get(session_slot_key)
             free_slot = ndb.Key(urlsafe=slot_url).get()
