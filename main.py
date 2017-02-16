@@ -4,6 +4,7 @@ import humantime
 from flask import Flask, render_template, request, flash, redirect, url_for, abort, session, make_response
 from model import Game, Slot, SlotState
 from wtforms import Form, StringField, HiddenField, validators
+from wtforms.fields.html5 import EmailField
 from texts import get_text_for_slot
 
 
@@ -115,12 +116,17 @@ def add_section_post():
             section_texts=section_texts)
 
 
-@app.route('/game/<game_key>')
+@app.route('/game/<game_key>',methods=['GET','POST'])
 def game(game_key):
     game = Game.get_game(game_key)
     if game == None:
         abort(404)
+    form = EmailSaveForm(request.form)
     completed_slots = game.get_completed_slots()
+    if request.method == 'POST' and form.validate():
+        # save email here
+        game.save_email(form.email.data)
+        flash("Your email address was saved")
     if game.slot_count == len(completed_slots):
         story_text = tuple(a.text for a in completed_slots)
         return render_template('complete.html', story_text=story_text)
@@ -128,12 +134,14 @@ def game(game_key):
         response = make_response(render_template('incomplete.html',
             slot_count=game.slot_count,
             completed_slot_count=len(completed_slots),
-            game_key=game_key))
+            game_key=game_key, form=form))
         previous_games = set(get_previous_games(request.cookies))
         previous_games.add(game_key)
         cookie_string = "+".join(previous_games)
         response.set_cookie('previous_games', cookie_string, max_age=10 * 365 * 24 * 60 * 60)
         return response
+
+
 
 
 @app.errorhandler(500)
@@ -154,3 +162,6 @@ class StoryCreateForm(Form):
     section = StringField('Section', [validators.Length(min=3, max=240)])
     game_key = HiddenField()
     slot_key = HiddenField()
+
+class EmailSaveForm(Form):
+    email = EmailField('email', [validators.DataRequired(), validators.Email()])

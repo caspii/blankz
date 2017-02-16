@@ -9,6 +9,7 @@ class Game(ndb.Model):
     date_altered =  ndb.DateTimeProperty(auto_now_add=True)
     slot_count =    ndb.IntegerProperty(default=6)
     game_type =     ndb.IntegerProperty(default=1)
+    emails =        ndb.StringProperty()
 
     @classmethod
     def new(cls):
@@ -59,6 +60,16 @@ class Game(ndb.Model):
             free_slot.state = SlotState.Reserved # make it possible to edit own old slot
             free_slot.put()
         return free_slot
+
+    def save_email(self, email):
+        """Write the given email into the repeated property. Duplicates are not saved"""
+        if self.emails is not None:
+            emails_list = self.emails.split(',')
+        else:
+            emails_list = []
+        emails_list.append(email)
+        self.emails = ','.join(set(emails_list))
+        self.put()
 
 
 class Slot(ndb.Model):

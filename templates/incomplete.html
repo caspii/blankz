@@ -7,25 +7,46 @@
 <p>Send your friends a link so that they can fill in the remaining blanks.</p>
 
 <div class="collapse" id="share-url">
-
   <script src="{{ url_for('static', filename='bower_components/clipboard/dist/clipboard.min.js') }}"></script>
-  <p>Share the following link:</p>
-
-
-  <div class="input-group">
-    <input type="text" class="form-control" id="edit-link" value="{{ request.url_root }}join/{{ game_key }}" readonly>
-    <div class="input-group-btn">
-      <button class="clip-button btn btn-info" data-clipboard-target="#edit-link" data-toggle="popover" data-placement="top" data-content="Copied!" type="button"  ga-on="click" ga-event-category="UI" ga-event-action="copy share url" ga-event-label="edit">
-        Copy to clipboard
-      </button>
+  <div class="card">
+    <div class="card-block">
+      <h4 class="card-title">Share this link</h4>
+        <p>Anyone with this link can fill in one of the blanks.</p>
+        <div class="input-group">
+          <input type="text" class="form-control" id="edit-link" value="{{ request.url_root }}join/{{ game_key }}" readonly>
+          <div class="input-group-btn">
+            <button class="clip-button btn btn-info" data-clipboard-target="#edit-link" data-toggle="popover" data-placement="top" data-content="Copied!" type="button"  ga-on="click" ga-event-category="UI" ga-event-action="copy share url" ga-event-label="edit">
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 <br>
 <p><a class="btn btn-lg btn-block btn-primary" href="#" data-toggle="collapse" data-target="#share-url" role="button" id="share-button" >Send link</a></p>
 
 <p><strong>Come back to this page to see if the story has been completed. </strong></p>
 
-<p><a class="btn btn-lg btn-block btn-secondary" href="/" role="button">Send me an email when complete</a></p>
+
+<div class="collapse" id="send-email">
+  <div class="card">
+    <div class="card-block">
+      <h4 class="card-title">Enter your email</h4>
+        <p>If you want, you can get an email once the story is complete. You'll never get spammed, promise!</p>
+        <form action="{{ url_for('game', game_key=game_key) }}" method=post>
+          <div class="input-group">
+            {{ form.email(placeholder="Your email address", class="form-control", id="email") }}
+            <div class="input-group-btn">
+              <button type="submit" class="clip-button btn btn-info">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+<p><a class="btn btn-lg btn-block btn-secondary" href="#" data-toggle="collapse" data-target="#send-email" role="button" id="send-email-button">Send me an email when complete</a></p>
 
 {% endblock %}
