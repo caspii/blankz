@@ -10,7 +10,7 @@
   "ignore": [
     "**/.*",
     "bower_components",
-    "static/bower_components",
+    "static/bower_components"
   ],
   "dependencies": {
     "clipboard": "^1.6.0"
