@@ -3,9 +3,9 @@ import humantime
 
 from flask import Flask, render_template, request, flash, redirect, url_for, abort, session, make_response
 from model import Game, Slot, SlotState
-from wtforms import Form, StringField, HiddenField, validators
+from wtforms import Form, StringField, HiddenField, validators, FieldList
 from wtforms.fields.html5 import EmailField
-from texts import get_text_for_slot
+from texts import get_texts_for_slot
 
 
 
@@ -74,8 +74,9 @@ def join(game_key):
 @app.route('/add_section/', methods=['GET'])
 @app.route('/add_section/<game_key>/', methods=['GET'])
 def add_section_get(game_key=None):
-    print "ADD SECTION CALLED"
     form = StoryCreateForm(request.form)
+    form.sections.append_entry()
+    form.sections.append_entry()
     if game_key == None:
         if 'last_created_key' in session:
             # User came here via back button. Fire back key mechanism
@@ -95,7 +96,7 @@ def add_section_get(game_key=None):
             return redirect('/game/' + game_key)
     form.slot_key.data = free_slot.get_slot_key()
     form.game_key.data = game_key
-    section_texts = get_text_for_slot(free_slot.slot_order)
+    section_texts = get_texts_for_slot(free_slot.slot_order)
     return render_template('add_section.html', form=form,
         section_texts=section_texts)
 
@@ -104,14 +105,14 @@ def add_section_post():
     form = StoryCreateForm(request.form)
     free_slot = Slot.get_slot(form.slot_key.data)
     if form.validate():
-        free_slot.save(form.section.data)
+        free_slot.save(form.sections.data)
         game_key = form.game_key.data
         session['last_created_key'] = game_key # Arm back key mechanism
         flash('Great, your entry has been saved')
         return redirect('/game/' + game_key)
     else:
         print "Validation error"
-        section_texts = get_text_for_slot(free_slot.slot_order)
+        section_texts = get_texts_for_slot(free_slot.slot_order)
         return render_template('add_section.html', form=form,
             section_texts=section_texts)
 
@@ -129,6 +130,7 @@ def game(game_key):
         flash("Your email address was saved")
     if game.slot_count == len(completed_slots):
         story_text = tuple(a.text for a in completed_slots)
+        print story_text
         return render_template('complete.html', story_text=story_text)
     else:
         response = make_response(render_template('incomplete.html',
@@ -159,7 +161,7 @@ def page_not_found(e):
 
 class StoryCreateForm(Form):
     #story_title = StringField('Give your story a name', [validators.Length(min=1, max=25), validators.DataRequired()])
-    section = StringField('Section', [validators.Length(min=3, max=240)])
+    sections = FieldList(StringField('Section', [validators.Length(min=3, max=240)]))
     game_key = HiddenField()
     slot_key = HiddenField()
 
