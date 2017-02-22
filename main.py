@@ -154,8 +154,6 @@ def game(game_key):
         return response
 
 
-
-
 @app.errorhandler(500)
 def server_error(e):
     # Log the error and stacktrace.
