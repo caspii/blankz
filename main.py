@@ -118,8 +118,12 @@ def add_section_post():
 
 @app.route('/game/<game_key>',methods=['GET','POST'])
 def game(game_key):
-    game = Game.get_game(game_key)
-    if game == None:
+    try:
+        game = Game.get_game(game_key)
+    except Exception as e:
+        logging.exception("Game could not be retrieved")
+        abort(404)
+    if game is None:
         abort(404)
     form = EmailSaveForm(request.form)
     completed_slots = game.get_completed_slots()
