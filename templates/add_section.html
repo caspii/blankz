@@ -5,14 +5,14 @@
 
 {% for section in form.sections %}
 
-  <p>{{ section_texts[loop.index0][0] }}</p>
-  <div class="form-group {% if section.errors %} has-error {% endif %}">
+  <label>{{ section_texts[loop.index0][0] }}</label>
+  <div class="form-group {% if section.errors %} has-warning {% endif %}">
   {{ section(placeholder=section_texts[loop.index0][1], class="form-control",id="section") }}
   {% if section.errors %}
-    <span class="help-block">{{ section.errors[0] }}</span>
+    <span class="form-control-feedback">{{ section.errors[0] }}</span>
   {% endif %}
   </div>
-
+  <br>
 {% endfor %}
 
 {{ form.game_key }}

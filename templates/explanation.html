@@ -2,26 +2,36 @@
 {% block body %}
 
 {% if game_key is defined %}
-  <h1>Help to complete this story</h1>
+  <h1>Complete this story</h1>
 {% else %}
   <h1>How does it work?</h1>
 {% endif %}
 
-The goal is to create a funny or absurd story by filling in the blank words.
+Fill in the blank words in a simple story to create a comical or nonsense result.
 
 <ol>
   {% if game_key is defined %}
-    <li>Somebody has already started this story and asked you (and others) to join in.</li>
+    <li>Somebody has already started this story and asked you to join in.</li>
   {% else %}
-    <li>One player starts and sends a link to the other players. </li>
+    <li>One persons starts.</li>
+    <li>That person invites the other players to join by sending them a link.</li>
   {% endif %}
-  <li>Every player fills out one of the blanks. For example, if the blank is "a man's name", the player could enter <mark>Horace</mark></li>
-  <li>Once all the blanks have been filled in, the story is complete and everyone gets to see it.</li>
+  <li>Every player fills out 2 blanks. <br>
+    For example, if one blank is <strong>a man's name</strong>, you could enter <span class="text-info">Horace</span></li>
+  <li>Once all the blanks have been filled in everyone gets to see it!</li>
 </ol>
 
 <div class="collapse" id="example">
-  <p><strong>Here's an example story where all the blanks have been filled in:</strong></p>
-  <p><mark>Mediocre Joe</mark> met <mark>transparent Kim</mark> at the bowling alley. Joe wore a seafoam green leisure suit. Kim wore a sandwich board. Joe said to Kim “During the last storm, we had a little party in the mud.” Kim said “She wasn’t that into me.” As a consequence, the band got back together. And the world said “Somehow, I think I saw this coming"</p>
+  <div class="card">
+    <div class="card-block">
+      <h4 class="card-title">Here's an example where all the blanks have been filled in</h4>
+      <p>Mediocre <span class="text-info">Horace</span> met transparent Kim at the bowling alley.
+        <span class="text-info">Horace</span> wore a seafoam green leisure suit. Kim wore a sandwich board.</p>
+      <p><span class="text-info">Horace</span> said to Kim “During the last storm, we had a little party in the mud.” </p>
+      <p>Kim said “She wasn’t that into me.” </p>
+      <p>As a consequence, the band got back together.</p>
+    </div>
+  </div>
 </div>
 
 <p><a class="btn btn-lg btn-block btn-secondary" href="#" role="button" data-toggle="collapse" data-target="#example">See an example</a></p>
