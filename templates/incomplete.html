@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<p> This story is not complete yet. So far <strong>{{ completed_slot_count }} of {{ slot_count }} </strong> blanks have been filled in. </p>
-<p>Send your friends a link so that they can fill in the remaining blanks.</p>
+<h3>Not complete yet!</h3>
+
+<p>To finish the story <strong>{{ missing_slots }} more people are required to fill in blanks</strong>. Send your friends a link so that they can fill in the rest.</p>
 
 <div class="collapse" id="share-url">
   <div class="card">
