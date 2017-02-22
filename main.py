@@ -45,7 +45,7 @@ def landing():
         if (game.slot_count == game.completed_slot_count):
             game.status = "Completed story created " + elapse_time
         else:
-            game.status = "Story with %s of %s blanks filled in. " \
+            game.status = "Story that %s of %s people have joined. " \
                 % (game.completed_slot_count, game.slot_count)
             game.status += "Created " + elapse_time
         previous_games.append(game)
