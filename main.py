@@ -56,6 +56,10 @@ def explanation():
     session.pop('last_created_key', None) # Disarm back key mechanism
     return render_template('explanation.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/join/<game_key>')
 def join(game_key):
     game = Game.get_game(game_key)
