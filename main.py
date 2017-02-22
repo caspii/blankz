@@ -1,5 +1,6 @@
 import logging
 import humantime
+import sendmail
 
 from flask import Flask, render_template, request, flash, redirect, url_for, abort, session, make_response
 from model import Game, Slot, SlotState
@@ -48,7 +49,6 @@ def landing():
                 % (game.completed_slot_count, game.slot_count)
             game.status += "Created " + elapse_time
         previous_games.append(game)
-    print previous_games
     return render_template('landing.html', previous_games=previous_games)
 
 @app.route('/explanation')
@@ -111,7 +111,6 @@ def add_section_post():
         flash('Great, your entry has been saved')
         return redirect('/game/' + game_key)
     else:
-        print "Validation error"
         section_texts = get_texts_for_slot(free_slot.slot_order)
         return render_template('add_section.html', form=form,
             section_texts=section_texts)
@@ -130,7 +129,14 @@ def game(game_key):
         flash("Your email address was saved")
     if game.slot_count == len(completed_slots):
         story_text = tuple(a.text for a in completed_slots)
-        print story_text
+        # Send story completed mail, unless this has already happened.
+        if game.email_sent == False:
+            sendmail.gameComplete(game)
+            print "SENDING MAIL"
+            game.set_email_sent()
+        else:
+            print "NOT SENDING MAIL"
+
         return render_template('complete.html', story_text=story_text)
     else:
         response = make_response(render_template('incomplete.html',

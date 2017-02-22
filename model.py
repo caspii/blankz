@@ -1,15 +1,17 @@
 from google.appengine.ext import ndb
 from flask import session
+import datetime
 
 class SlotState:
     Free, Reserved, Complete = range(3)
 
 class Game(ndb.Model):
-    date_created =  ndb.DateTimeProperty(auto_now=True)
-    date_altered =  ndb.DateTimeProperty(auto_now_add=True)
+    date_created =  ndb.DateTimeProperty(auto_now_add=True)
+    date_altered =  ndb.DateTimeProperty(auto_now=True)
     slot_count =    ndb.IntegerProperty(default=5)
     game_type =     ndb.IntegerProperty(default=1)
     emails =        ndb.StringProperty()
+    email_sent =    ndb.BooleanProperty(default=False)
 
     @classmethod
     def new(cls):
@@ -38,9 +40,9 @@ class Game(ndb.Model):
 
     def get_free_slot(self):
         """
-        Returns one free slot, unreserved if possible, and reserves it.
+        Return one free slot, unreserved if possible, and reserve it.
 
-        Slot is saved in session so that user cannot accidentally reserve
+        Save slot in session so that user cannot accidentally reserve
         multiple slots (by reloading page)
         """
         session_slot_key = 'slot' + str(self.key.id())
@@ -71,6 +73,11 @@ class Game(ndb.Model):
             emails_list = []
         emails_list.append(email)
         self.emails = ','.join(set(emails_list))
+        self.put()
+
+    def set_email_sent(self):
+        """Write a timestamp to datastore logging that game complete mail was sent"""
+        self.email_sent = True
         self.put()
 
 
