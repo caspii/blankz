@@ -19,7 +19,7 @@ def gameComplete(game):
             'from': 'Blankz <no-reply@blankz.co>',
             'to': 'mail@blankz.co',
             'bcc': game.emails,
-            'SUBJECT': SUBJECT,
+            'subject': SUBJECT,
             'text': BODY_TEXT % game.get_game_key()
         }
         resp, content = http.request(
