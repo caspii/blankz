@@ -14,7 +14,8 @@ def gameComplete(game):
     http.add_credentials('api', MAILGUN_API_KEY)
 
     data = {
-        'from': 'Blankz <hello@blankz.co>',
+        'from': 'Blankz <no-reply@blankz.co>',
+        'to': 'mail@blankz.co',
         'bcc': game.emails,
         'SUBJECT': SUBJECT,
         'text': BODY_TEXT % game.get_game_key()
