@@ -31,5 +31,4 @@ def get_texts_for_slot(slot_order):
     """
     Return descriptive texts and placeholders for the given slot.
     """
-    print slot_order
     return texts[slot_order]

@@ -140,10 +140,10 @@ def game(game_key):
         # Send story completed mail, unless this has already happened.
         if game.email_sent == False:
             sendmail.gameComplete(game)
-            print "SENDING MAIL"
+            # print "SENDING MAIL"
             game.set_email_sent()
         else:
-            print "NOT SENDING MAIL"
+            # print "NOT SENDING MAIL"
 
         return render_template('complete.html', story_text=story_text)
     else:

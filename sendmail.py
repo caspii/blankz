@@ -20,8 +20,6 @@ def gameComplete(game):
         'SUBJECT': SUBJECT,
         'text': BODY_TEXT % game.get_game_key()
     }
-
-    print data
     resp, content = http.request(
         REQUEST_URL, 'POST', urlencode(data),
         headers={"Content-Type": "application/x-www-form-urlencoded"})
