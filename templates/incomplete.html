@@ -8,7 +8,7 @@
 <div class="collapse" id="share-url">
   <div class="card">
     <div class="card-block">
-      <h4 class="card-title">Share this link</h4>
+      <h2 class="card-title">Share this link</h2>
         <p>Anyone with this link can fill in one of the blanks.</p>
         <div class="input-group">
           <input type="text" class="form-control" id="edit-link" value="{{ request.url_root }}join/{{ game_key }}" readonly>
@@ -30,7 +30,7 @@
 <div class="collapse" id="send-email">
   <div class="card">
     <div class="card-block">
-      <h4 class="card-title">Enter your email</h4>
+      <h2 class="card-title">Enter your email</h2>
         <p>If you want, you can get an email once the story is complete. You'll never get spammed, promise!</p>
         <form action="{{ url_for('game', game_key=game_key) }}" method=post>
           <div class="input-group">
