@@ -139,11 +139,10 @@ def game(game_key):
         story_text = tuple(a.text for a in completed_slots)
         # Send story completed mail, unless this has already happened.
         if game.email_sent == False:
-            sendmail.gameComplete(game)
-            loggin.info("Sending complete mails to: " + game.emails)
+            sendmail.gameComplete(game)            
             game.set_email_sent()
         else:
-            loggin.info("Complete mail already sent")
+            logging.info("Complete mail already sent")
 
         return render_template('complete.html', story_text=story_text)
     else:

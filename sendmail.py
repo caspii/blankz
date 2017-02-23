@@ -13,17 +13,19 @@ def gameComplete(game):
     http = httplib2.Http()
     http.add_credentials('api', MAILGUN_API_KEY)
 
-    data = {
-        'from': 'Blankz <no-reply@blankz.co>',
-        'to': 'mail@blankz.co',
-        'bcc': game.emails,
-        'SUBJECT': SUBJECT,
-        'text': BODY_TEXT % game.get_game_key()
-    }
-    resp, content = http.request(
-        REQUEST_URL, 'POST', urlencode(data),
-        headers={"Content-Type": "application/x-www-form-urlencoded"})
+    if game.emails is not None:
+        logging.info("Sending complete mail to " + game.emails)
+        data = {
+            'from': 'Blankz <no-reply@blankz.co>',
+            'to': 'mail@blankz.co',
+            'bcc': game.emails,
+            'SUBJECT': SUBJECT,
+            'text': BODY_TEXT % game.get_game_key()
+        }
+        resp, content = http.request(
+            REQUEST_URL, 'POST', urlencode(data),
+            headers={"Content-Type": "application/x-www-form-urlencoded"})
 
-    if resp.status != 200:
-        logging.error(
-            'Mailgun API error: {} {}'.format(resp.status, content))
+        if resp.status != 200:
+            logging.error(
+                'Mailgun API error: {} {}'.format(resp.status, content))
