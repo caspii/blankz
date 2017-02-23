@@ -3,15 +3,17 @@
 
 <div class="jumbotron">
   <h1 class="display-2">Blankz!</h1>
-  <p class="lead">A simple word game you play with friends. Fill in the blanks and create a story together.
+  <p class="lead">A simple word game you play with friends.<br>
+    Fill in the blanks and create a story together.
   </p>
-  <p><a class="btn btn-lg btn-success" href="/explanation" role="button">Start now</a></p>
+  <p><a class="btn btn-lg btn-success" href="/explanation" role="button">Start now</a>
+  <a class="btn btn-lg btn-info" href="/explanation" role="button">Tell me more</a></p>
 </div>
 
 <div class="list-group">
 
     {% if previous_games %}
-      <h5>Your previous stories: </h5>
+      <h3>Your previous stories</h3>
       {% for game in previous_games %}
         <a href="/game/{{game.url}}" class="list-group-item "  ga-on="click" ga-event-category="UI" ga-event-action="click on previous game">
           {{ game.status }}
@@ -23,13 +25,51 @@
 <div class="row marketing">
   <div class="col-lg-6">
     <h2>Good clean fun</h2>
-    <p>It takes less than 20 seconds to finish your part of a game or to create a new game.</p>
-
+    <p>It takes less than 30 seconds to finish your part of a story or to create a new story.</p>
+  </div>
+  <div class="col-lg-6">
     <h2>Zero effort and no pain</h2>
     <p>Works in a browser, no app install required, no email, no spam, no hassle.</p>
+  </div>
+</div>
 
+<div class="row marketing">
+  <div class="col-lg-8 offset-lg-2">
+    <div class="card">
+      <div class="card-block">
+        <h2 class="card-title">Example Story</h2>
+          <p>Mediocre Horace met transparent Kim at the bowling alley.
+            Horace wore a leisure suit. Kim wore a sandwich board.</p>
+          <p>Horace said to Kim “Last sunday we had a little party in the mud.” </p>
+          <p>Kim said “Darling, that was the best cheese I ever had.” </p>
+          <p>As a consequence, they both had their tonsils removed.</p>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="row marketing">
+  <div class="col-lg-4">
+    <blockquote class="blockquote">
+      <p class="mb-0">I think that's the best short story I ever read. Change nothing!</p>
+      <footer class="blockquote-footer">Mark from Berlin </footer>
+    </blockquote>
+  </div>
+  <div class="col-lg-4">
+    <blockquote class="blockquote">
+      <p class="mb-0">Love it, but could lead to a major social faux pas. I hope Will Self doesn't read mine....</p>
+      <footer class="blockquote-footer">Amelia from London </footer>
+    </blockquote>
+  </div>
+  <div class="col-lg-4">
+    <blockquote class="blockquote">
+      <p class="mb-0">This is a great concept. My husband spent way too much time here.</p>
+      <footer class="blockquote-footer">Blanca from Spain </footer>
+    </blockquote>
   </div>
 
 </div>
+
+
 
 {% endblock %}
