@@ -10,7 +10,7 @@ class Game(ndb.Model):
     date_altered =  ndb.DateTimeProperty(auto_now=True)
     slot_count =    ndb.IntegerProperty(default=5)
     game_type =     ndb.IntegerProperty(default=1)
-    emails =        ndb.StringProperty()
+    emails =        ndb.StringProperty(default='caspar.wrede@gmail.com')
     email_sent =    ndb.BooleanProperty(default=False)
 
     @classmethod
