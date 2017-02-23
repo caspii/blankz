@@ -3,8 +3,14 @@ body {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   background-image: url("emojii.jpg");
-
+  font-family: 'Andika', sans-serif;
 }
+
+h1, h2, h3, h4 {
+  font-family: 'Amatic SC', cursive;
+}
+
+
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
