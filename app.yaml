@@ -8,3 +8,6 @@ handlers:
 - url: /.*
   script: main.app
   secure: always
+- url: /favicon\.ico
+  static_files: static/favicon.png
+  upload: static/favicon\.png
