@@ -18,7 +18,7 @@ This invokes the [Python debugger](https://docs.python.org/3/library/pdb.html)
 ## `glcoud` commands
 * Deploy:  `gcloud app deploy`
 * List projects: `gcloud projects list`
-* Change project project: `gcloud init`
+* Change project: `gcloud init`
 
 ## Installing Python packages
 New packages are installed to the `lib` folder using the `pip install -t lib <package-name>` command.
