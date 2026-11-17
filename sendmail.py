@@ -1,8 +1,9 @@
 import httplib2
 import logging
+import os
 from urllib import urlencode
 
-MAILGUN_API_KEY = 'key-4b87291653134a800f45522ab1679d39'
+MAILGUN_API_KEY = os.environ.get('MAILGUN_API_KEY', '')
 MAILGUN_DOMAIN_NAME = 'mg.casparwre.de'
 REQUEST_URL = 'https://api.mailgun.net/v3/{0}/messages'.format(MAILGUN_DOMAIN_NAME)
 SUBJECT = "A story on Blankz.co was just completed"
